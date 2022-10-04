@@ -1,0 +1,56 @@
+﻿@page "/machinemanager"
+@using RP_IndustriPark.Services
+@inject HttpClient Http
+
+<PageTitle>Machine Manager</PageTitle>
+
+<h2>MachineManager</h2>
+
+@if (indusrtylist == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DeviceID</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var industry in indusrtylist)
+            {
+                <tr>
+                    <td>@industry.DeviceID</td>
+                    <td>@industry.Location</td>
+                    <td>@industry.Date.ToShortDateString()</td>
+                    <td>@industry.Type</td>
+                    <td>@industry.Status.ToString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    [Inject]
+
+    public IIndustryClient IndustryClient { get; set; } = default!;
+    
+
+    private List<MachineIndustry> indusrtylist = new List<MachineIndustry>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        indusrtylist = (await IndustryClient.GetAsync())?.ToList();
+    }
+
+
+    
+}
