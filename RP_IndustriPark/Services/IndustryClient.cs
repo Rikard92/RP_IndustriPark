@@ -1,9 +1,10 @@
-﻿using System.Net.Http.Json;
+﻿using RP_IndustriPark.Shared;
+using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
 namespace RP_IndustriPark.Services
 {
-    public class IndustryClient: IIndustryClient
+    public class IndustryClient : IIndustryClient
     {
         private readonly HttpClient httpClient;
 
@@ -15,7 +16,7 @@ namespace RP_IndustriPark.Services
         public async Task<IEnumerable<MachineIndustry>?> GetAsync()
         {
 
-            return await httpClient.GetFromJsonAsync<MachineIndustry[]>("sample-data/industry.json");
+            return await httpClient.GetFromJsonAsync<MachineIndustry[]>("api/test");
         }
     }
 }

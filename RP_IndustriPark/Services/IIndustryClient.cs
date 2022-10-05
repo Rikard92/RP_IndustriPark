@@ -1,4 +1,6 @@
-﻿namespace RP_IndustriPark.Services
+﻿using RP_IndustriPark.Shared;
+
+namespace RP_IndustriPark.Services
 {
     public interface IIndustryClient
     {

@@ -1,5 +1,4 @@
 ﻿@page "/machinemanager"
-@using RP_IndustriPark.Services
 @inject HttpClient Http
 
 <PageTitle>Machine Manager</PageTitle>
@@ -39,8 +38,8 @@ else
 
 
 @code {
-    [Inject]
 
+    [Inject]
     public IIndustryClient IndustryClient { get; set; } = default!;
     
 

@@ -1,4 +1,4 @@
-﻿namespace RP_IndustriPark
+﻿namespace RP_IndustriPark.Shared
 {
     public class MachineIndustry
     {
