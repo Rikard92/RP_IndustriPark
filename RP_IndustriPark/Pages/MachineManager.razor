@@ -5,43 +5,72 @@
 
 <h2>MachineManager</h2>
 
-@if (indusrtylist == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>DeviceID</th>
-                <th>Location</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var industry in indusrtylist)
-            {
-                <tr>
-                    <td>@industry.DeviceID</td>
-                    <td>@industry.Location</td>
-                    <td>@industry.Date.ToShortDateString()</td>
-                    <td>@industry.Type</td>
-                    <td>@industry.Status.ToString()</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
+
+<div class="row">
+    <div class="col-2">
+        <div class="input-group-append input-group-lg">
+            <button type="submit" class="btn btn-info" @onclick="AddMaschine">New Device</button>
+        </div>
+
+
+        <h5>Total Devices: @indusrtylist.Count()</h5>
+        <h5>Active Devices: @indusrtylist.Where(d => d.Status ==true).Count()</h5>
+    </div>
+
+    <div class="col-10">
+        @if (indusrtylist == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>DeviceID</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var industry in indusrtylist)
+                    {
+                        <tr>
+                            <td>@industry.DeviceID</td>
+                            <td>@industry.Location</td>
+                            <td>@industry.Date.ToShortDateString()</td>
+                            <td>@industry.Type</td>
+                            @if (industry.Status)
+                            {
+                                <td><button type="submit" style="background-color:lawngreen" class="btn btn-info" @onclick="@(() => DeviceTogle(industry))">online</button></td>
+                            }
+                            else
+                            {
+                                <td><button type="submit" style="background-color:lightpink" class="btn btn-info" @onclick="@(() => DeviceTogle(industry))">offline</button></td>
+                            }
+                            <td><span class="oi oi-pencil" aria-hidden="true"></span></td>
+                            <td><span class="oi oi-trash" aria-hidden="true" @onclick="@(() => Remove(industry))"></span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+
 
 
 @code {
 
     [Inject]
     public IIndustryClient IndustryClient { get; set; } = default!;
-    
+
 
     private List<MachineIndustry> indusrtylist = new List<MachineIndustry>();
 
@@ -50,6 +79,34 @@ else
         indusrtylist = (await IndustryClient.GetAsync())?.ToList();
     }
 
+    private void AddMaschine()
+    {
 
-    
+        Random rnd = new Random();
+
+        for (int j = 0; j < 4; j++)
+        {
+            Console.WriteLine(); // returns random integers >= 10 and < 20
+        }
+
+        MachineIndustry newdevice = new MachineIndustry
+            {
+                DeviceID = rnd.Next(100, 9999) + "e81-d" + rnd.Next(10, 99) + "st-rp" + rnd.Next(100, 999),
+                Date = DateTime.Today,
+                Status = false,
+                Type = "Device",
+                Location = "Stockholm"
+
+            };
+        indusrtylist.Add(newdevice);
+    }
+    private void DeviceTogle(MachineIndustry device)
+    {
+        device.Status = !device.Status;
+    }
+
+    private void Remove(MachineIndustry device)
+    {
+        indusrtylist.Remove(device);
+    }
 }

@@ -16,7 +16,7 @@ namespace RP_IndustriPark.Services
         public async Task<IEnumerable<MachineIndustry>?> GetAsync()
         {
 
-            return await httpClient.GetFromJsonAsync<MachineIndustry[]>("api/test");
+            return await httpClient.GetFromJsonAsync<MachineIndustry[]>("api/industrypark");
         }
     }
 }
