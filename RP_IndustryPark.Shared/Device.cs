@@ -1,8 +1,9 @@
 ﻿namespace RP_IndustriPark.Shared
 {
-    public class MachineIndustry
+    public class Device
     {
-        public string DeviceID { get; set; }
+        
+        public string Id { get; set; } = Guid.NewGuid().ToString("n");
 
         public string? Location { get; set; }
 

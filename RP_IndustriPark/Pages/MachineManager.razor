@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-2">
         <div class="input-group-append input-group-lg">
-            <button type="submit" class="btn btn-info" @onclick="AddMaschine">New Device</button>
+            <button type="submit" class="btn btn-info" @onclick="AddDevice">New Device</button>
         </div>
 
 
@@ -41,7 +41,7 @@
                     @foreach (var industry in indusrtylist)
                     {
                         <tr>
-                            <td>@industry.DeviceID</td>
+                            <td>@industry.Id</td>
                             <td>@industry.Location</td>
                             <td>@industry.Date.ToShortDateString()</td>
                             <td>@industry.Type</td>
@@ -72,41 +72,46 @@
     public IIndustryClient IndustryClient { get; set; } = default!;
 
 
-    private List<MachineIndustry> indusrtylist = new List<MachineIndustry>();
+    private List<Device> indusrtylist = new List<Device>();
 
     protected override async Task OnInitializedAsync()
     {
         indusrtylist = (await IndustryClient.GetAsync())?.ToList();
     }
 
-    private void AddMaschine()
+    private async void AddDevice()
     {
 
         Random rnd = new Random();
 
-        for (int j = 0; j < 4; j++)
-        {
-            Console.WriteLine(); // returns random integers >= 10 and < 20
-        }
-
-        MachineIndustry newdevice = new MachineIndustry
+        Device newdevice = new Device
             {
-                DeviceID = rnd.Next(100, 9999) + "e81-d" + rnd.Next(10, 99) + "st-rp" + rnd.Next(100, 999),
+                //DeviceID = rnd.Next(1000, 9999) + "e81-d" + rnd.Next(10, 99) + "st-rp" + rnd.Next(100, 999),
                 Date = DateTime.Today,
                 Status = false,
                 Type = "Device",
                 Location = "Stockholm"
 
             };
-        indusrtylist.Add(newdevice);
+        var createddevice = await IndustryClient.PostAsync(newdevice);
+        if (createddevice!=null)
+            indusrtylist.Add(createddevice);
     }
-    private void DeviceTogle(MachineIndustry device)
+    private void DeviceTogle(Device device)
     {
         device.Status = !device.Status;
     }
 
-    private void Remove(MachineIndustry device)
+    private async void Remove(Device device)
     {
-        indusrtylist.Remove(device);
+        
+        var isRemoved = await IndustryClient.RemoveAsync(device.Id);
+
+        if (isRemoved)
+        {
+            indusrtylist.Remove(device);
+            StateHasChanged();
+
+        }
     }
 }
