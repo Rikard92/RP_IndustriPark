@@ -99,16 +99,41 @@ namespace RP_IndustriPark.Server
         [FunctionName("DeleteDevice")]
         public static async Task<IActionResult> Delete(
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "industrypark/{id}")] HttpRequest req,
-            [Table("items", "Todo", "{id}", Connection = "AzureWebJobsStorage")] DeviceTableEntity deviceTableToDelete,
+            [Table("items", "Machine", "{id}", Connection = "AzureWebJobsStorage")] DeviceTableEntity deviceTableToDelete,
             [Table("items", Connection = "AzureWebJobsStorage")] CloudTable itemTable,
             ILogger log, string id)
         {
             log.LogInformation("Delete Device");
 
-            //if (itemTableToDelete == null || string.IsNullOrWhiteSpace(itemTableToDelete.Text)) return new BadRequestResult();
-
             var operation = TableOperation.Delete(deviceTableToDelete);
             await itemTable.ExecuteAsync(operation);
+            return new NoContentResult();
+        }
+
+        [FunctionName("ToggleDevice")]
+        public static async Task<IActionResult> Put(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "industrypark/{id}")] HttpRequest req,
+            [Table("items", Connection = "AzureWebJobsStorage")] CloudTable itemTable,
+            ILogger log, string id)
+        {
+            log.LogInformation("Put Device");
+
+            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            var deviceToUpdate = JsonConvert.DeserializeObject<Device>(requestBody);
+
+            //if (itemToUpdate is null || string.IsNullOrEmpty(id)) return new BadRequestResult();
+
+            var opertaion = TableOperation.Retrieve<DeviceTableEntity>("Machine", id);
+            var found = await itemTable.ExecuteAsync(opertaion);
+
+            if (found.Result == null) return new NotFoundResult();
+
+            var existingDevice = found.Result as DeviceTableEntity;
+            existingDevice.Status = !deviceToUpdate.Status;
+
+            var opertionReplace = TableOperation.Replace(existingDevice);
+            await itemTable.ExecuteAsync(opertionReplace);
+
             return new NoContentResult();
         }
 

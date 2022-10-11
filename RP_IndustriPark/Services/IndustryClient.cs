@@ -30,9 +30,15 @@ namespace RP_IndustriPark.Services
             return null;
         }
 
-        public Task<Device?> PutAsync(Device device)
+        public async Task<bool> ToggleAsync(Device device)
         {
-            throw new NotImplementedException();
+            var toggeldevice = device;
+
+            //togeldItem.Status = !device.Status;
+
+            var response = await httpClient.PutAsJsonAsync($"api/industrypark/{device.Id}", toggeldevice);
+
+            return response.IsSuccessStatusCode ? true : false;
         }
 
         public async Task<bool> RemoveAsync(string id)

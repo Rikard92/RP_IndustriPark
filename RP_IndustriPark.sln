@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RP_IndustriPark", "RP_Indus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RP_IndustryPark.Shared", "RP_IndustryPark.Shared\RP_IndustryPark.Shared.csproj", "{504A3A3A-3B05-48EF-9FB6-10E00C3F2FE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RP_IndustriPark.Server", "RP_IndustriPark.Server\RP_IndustriPark.Server.csproj", "{65D9F858-7AAC-49ED-B6E7-4451B249CF90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RP_IndustriPark.Server", "RP_IndustriPark.Server\RP_IndustriPark.Server.csproj", "{65D9F858-7AAC-49ED-B6E7-4451B249CF90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -17,7 +17,9 @@ namespace RP_IndustriPark.Server.Extentions
                 Status = device.Status,
                 Date = device.Date,
                 Location = device.Location,
-                Type = device.Type
+                Type = device.Type,
+                PartitionKey = "Machine",
+                RowKey = device.Id
                 
             };
         }

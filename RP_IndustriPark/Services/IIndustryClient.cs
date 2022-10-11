@@ -6,7 +6,7 @@ namespace RP_IndustriPark.Services
     {
         Task<IEnumerable<Device>?> GetAsync();
         Task<Device?> PostAsync(Device device);
-        Task<Device?> PutAsync(Device device);
+        Task<bool> ToggleAsync(Device device);
         Task<bool> RemoveAsync(string id);
     }
 }

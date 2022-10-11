@@ -3,68 +3,7 @@
 
 <PageTitle>Machine Manager</PageTitle>
 
-<h2>MachineManager</h2>
-
-
-
-<div class="row">
-    <div class="col-2">
-        <div class="input-group-append input-group-lg">
-            <button type="submit" class="btn btn-info" @onclick="AddDevice">New Device</button>
-        </div>
-
-
-        <h5>Total Devices: @indusrtylist.Count()</h5>
-        <h5>Active Devices: @indusrtylist.Where(d => d.Status ==true).Count()</h5>
-    </div>
-
-    <div class="col-10">
-        @if (indusrtylist == null)
-        {
-            <p><em>Loading...</em></p>
-        }
-        else
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>DeviceID</th>
-                        <th>Location</th>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var industry in indusrtylist)
-                    {
-                        <tr>
-                            <td>@industry.Id</td>
-                            <td>@industry.Location</td>
-                            <td>@industry.Date.ToShortDateString()</td>
-                            <td>@industry.Type</td>
-                            @if (industry.Status)
-                            {
-                                <td><button type="submit" style="background-color:lawngreen" class="btn btn-info" @onclick="@(() => DeviceTogle(industry))">online</button></td>
-                            }
-                            else
-                            {
-                                <td><button type="submit" style="background-color:lightpink" class="btn btn-info" @onclick="@(() => DeviceTogle(industry))">offline</button></td>
-                            }
-                            <td><span class="oi oi-pencil" aria-hidden="true"></span></td>
-                            <td><span class="oi oi-trash" aria-hidden="true" @onclick="@(() => Remove(industry))"></span></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-</div>
-
-
-
+<Devices DevicesList="indusrtylist"></Devices>
 
 @code {
 
@@ -77,41 +16,5 @@
     protected override async Task OnInitializedAsync()
     {
         indusrtylist = (await IndustryClient.GetAsync())?.ToList();
-    }
-
-    private async void AddDevice()
-    {
-
-        Random rnd = new Random();
-
-        Device newdevice = new Device
-            {
-                //DeviceID = rnd.Next(1000, 9999) + "e81-d" + rnd.Next(10, 99) + "st-rp" + rnd.Next(100, 999),
-                Date = DateTime.Today,
-                Status = false,
-                Type = "Device",
-                Location = "Stockholm"
-
-            };
-        var createddevice = await IndustryClient.PostAsync(newdevice);
-        if (createddevice!=null)
-            indusrtylist.Add(createddevice);
-    }
-    private void DeviceTogle(Device device)
-    {
-        device.Status = !device.Status;
-    }
-
-    private async void Remove(Device device)
-    {
-        
-        var isRemoved = await IndustryClient.RemoveAsync(device.Id);
-
-        if (isRemoved)
-        {
-            indusrtylist.Remove(device);
-            StateHasChanged();
-
-        }
     }
 }
